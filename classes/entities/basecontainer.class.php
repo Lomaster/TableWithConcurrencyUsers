@@ -70,7 +70,7 @@ abstract class BaseContainer {
 	 * @param array $Data
 	 * @return bool
 	 */
-	public function setData(array $Data)
+	public function init(array $Data)
 	{
 		$Data = $this->validateData($Data);
 		foreach($this->getInfoCheckMask() as $Key=>$Val)

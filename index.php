@@ -48,6 +48,15 @@
         #GoodsTable {
             width: 100%;
         }
+        #GoodsTable tbody tr:not(.fble_htr) {
+            counter-increment: rowNumber;
+        }
+
+        #GoodsTable tbody tr:not(.fble_htr) td:first-child::before {
+            content: counter(rowNumber);
+            min-width: 1em;
+            margin-right: 0.5em;
+        }
     </style>
 </head>
 
@@ -56,7 +65,8 @@
 <div class="container">
 
     <div class="starter-template">
-        <h1>Goods <button type="button" class="btn btn-primary btn-large" onclick="oPage.addRow();">+</button></h1>
+        <h1>Goods <button type="button" class="btn btn-primary btn-large" onclick="oPage.confirmCreateRow();">+</button>
+            <div id='AjaxLoader' style="float: right; display: inline;"><img src="cdn/img/loading.gif" /></div></h1>
         <p class="lead">
         <div class="bs-example">
             <table class="table-striped" id="GoodsTable">
@@ -68,16 +78,6 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr class="active">
-                    <td>1</td>
-                    <td><a href="#" class="goodsRow">Credit Card</a></td>
-                    <td><a class="btn btn-danger btn-xs btn-small" data-toggle="modal" data-target="#confirmDelete">X</a></td>
-                </tr>
-                <tr class="success">
-                    <td>2</td>
-                    <td><a data-original-title="Enter tripname" data-name="tripname" data-pk="1" data-type="text" id="tripname" href="#" class="editable">superuser 1</a></td>
-                    <td>01/07/2014</td>
-                </tr>
                 </tbody>
             </table>
         </div>
@@ -102,26 +102,27 @@
         </div>
     </div>
 </div>
-<div class="modal fade" id="confirmAdd" tabindex="-1" role="dialog" aria-labelledby="AddRow">
+<div class="modal fade" id="confirmCreate" tabindex="-1" role="dialog" aria-labelledby="AddRow">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="AddRow">Remove row</h4>
+                <h4 class="modal-title" id="AddRow">Create row</h4>
             </div>
             <div class="modal-body">
-                Are you sure?
+                <form>
+                    <div class="form-group">
+                        <label class="control-label" for="recipient-name">Name:</label>
+                        <input type="text" id="commodity-name" class="form-control">
+                    </div>
+                </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-danger" onclick="oPage.addRow();">Delete</button>
+                <button type="button" class="btn btn-success" onclick="oPage.createRow();">Create</button>
             </div>
         </div>
     </div>
-</div>
-
-<div id='AjaxLoader' style="position: fixed; left: 50%; top: 50%; display: none;">
-    <img src="cdn/img/loading.gif" />
 </div>
 
 <script src="cdn/js/index.js"></script>

@@ -16,6 +16,8 @@ class TripContainer extends BaseContainer
 		];
 	}
 
-
+	public function getCollectionForStore() {
+		return _TripsCollection;
+	}
 
 }

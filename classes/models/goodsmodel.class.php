@@ -1,53 +1,58 @@
 <?php
 
-namespace Entities;
+namespace Models;
+
+use Entities\BaseContainer;
 
 class GoodsModel {
 
-	protected $BriefInfo = [];
-	protected $Id = null;
+	protected static $oMongoDB = null; //We will use 1 connection
+	protected $CollectionName = '';
 
-	protected static function getCollection() {
-		return getMongoDB()->selectCollection(_UserCollection);
+	public function __construct(BaseContainer $oCommodity)
+	{
+		$this->CollectionName = $oCommodity->getCollectionForStore();
 	}
 
-	/**
-	 * Factory method
-	 * @param $UserId
-	 * @return UserContainer
-	 * @throws \Exception
-	 */
-	public static function getInstance($UserId) {
-		$UserId = new \MongoId("".$UserId);
-		$Filter = ['_id' => $UserId];
-		if ( !($Result = self::getUserCollection()->findOne($Filter)) ) {
-			throw new \Exception("Incorrect UserId `{$UserId}`", 20);
+	protected static function getMongoDB()
+	{
+		if ( is_null(self::$oMongoDB) ) {
+			$Mongo = new \MongoClient();
+			self::$oMongoDB = $Mongo->selectDB(_GoodsDB);
 		}
-		return new UserContainer($Result);
+		return self::$oMongoDB;
 	}
-	
-	/**
-	 * @param array $BriefInfo
-	 */
-	protected function __construct(array $BriefInfo) {
-		$BriefInfo['Id'] = "".$BriefInfo['_id'];
-		$this->BriefInfo = $BriefInfo;
-		$this->Id = $BriefInfo['Id'];
-	}
-	
-	/**
-	 * @return string
-	 */
-	public function getId() {
-		return $this->Id;
+
+	protected function getCollection()
+	{
+		return self::getMongoDB()->selectCollection($this->CollectionName);
 	}
 
 	/**
-	 * User data
 	 * @return array
 	 */
-	public function getBriefInfo() {
-		return $this->BriefInfo;
+	public function read() {
+		$oCollection = $this->getCollection();
+		$ResArr = iterator_to_array($oCollection->find());
+		$ResArr = [
+	555 => ['Name' => 'ololo2'],
+	888777 => ['Name' => 'd df sd2'],
+	55888 => ['Name' => 'sd fsd fs'],
+];
+		return $ResArr;
+	}
+
+	/**
+	 * @return array
+	 */
+	public function create() {
+		$oCollection = $this->getCollection();
+		$ResArr = iterator_to_array($oCollection->find());
+
+		$ResArr = [
+			5486 => ['Name' => 'BANG!! PPP'],
+		];
+		return $ResArr;
 	}
 
 }

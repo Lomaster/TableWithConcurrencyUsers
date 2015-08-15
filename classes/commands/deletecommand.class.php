@@ -4,7 +4,7 @@ namespace Commands;
 
 use Entities\BaseContainer;
 
-class UpdateCommand extends BaseCommand
+class DeleteCommand extends BaseCommand
 {
 	/**
 	 * Getter for mask of validation
@@ -14,7 +14,6 @@ class UpdateCommand extends BaseCommand
 	{
 		return [
 			'pk' => ['string', 40],
-			'value' => ['string', 40],
 		];
 	}
 

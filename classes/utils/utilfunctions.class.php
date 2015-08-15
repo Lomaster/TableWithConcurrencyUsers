@@ -45,13 +45,4 @@ class UtilFunctions {
 		return $Res;
 	}
 
-	function getMongoDB() {
-		static $oMongoDB = null;
-		if ( is_null($oMongoDB) ) {
-			$Mongo = new MongoClient();
-			$oMongoDB = $Mongo->selectDB(_GoodsDB);
-		}
-		return $oMongoDB;
-	}
-
 }

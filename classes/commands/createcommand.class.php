@@ -2,9 +2,7 @@
 
 namespace Commands;
 
-use Entities\BaseContainer;
-
-class UpdateCommand extends BaseCommand
+class CreateCommand extends BaseCommand
 {
 	/**
 	 * Getter for mask of validation
@@ -13,15 +11,14 @@ class UpdateCommand extends BaseCommand
 	protected function getInfoCheckMask()
 	{
 		return [
-			'pk' => ['string', 40],
-			'value' => ['string', 40],
+			'Name' => ['string', 40],
 		];
 	}
 
 	public function execute()
 	{
-		$oContainer = BaseContainer::getInstance('trip');
-		return '';
+		$ResArr = $this->getModel()->create();
+		return $ResArr;
 	}
 
 

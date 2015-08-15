@@ -2,9 +2,12 @@
 
 namespace Commands;
 
-use Entities;
+use Entities, Entities\BaseContainer;
 
 abstract class BaseCommand {
+
+	private $oModel = null;
+	protected $Info = [];
 
 	public abstract function execute();
 	protected abstract function getInfoCheckMask();
@@ -44,9 +47,9 @@ abstract class BaseCommand {
 	{
 		foreach($this->getInfoCheckMask() as $Key=>$Val)
 		{
-			if ( empty($Data['pk']) )
+			if ( empty($Data[$Key]) )
 			{
-				throw new \HTTPException("Undefined key `{$Key}`!");
+				throw new \Exception("Undefined key `{$Key}`!");
 			}
 			$DataValue = $Data[$Key];
 			switch($Val[0]) {
@@ -71,23 +74,38 @@ abstract class BaseCommand {
 	 * @param array $Data
 	 * @return bool
 	 */
-	public function setData(array $Data)
+	public function init(array $Data)
 	{
 		$Data = $this->validateData($Data);
 		foreach($this->getInfoCheckMask() as $Key=>$Val)
 		{
 			$this->Info[$Key] = $Data[$Key];
 		}
+		//Now we have only 1 commodity `trip`, but can init any from specified parameter
+		$oContainer = BaseContainer::getInstance($this->Info['Goods']);
+//		var_dump(__FUNCTION__, $this->Info['Goods'], $oContainer);
+		$this->initModel($oContainer);
 		return true;
 	}
 
 	/**
-	 * Getter for Container data
-	 * @return array
+	 * Init for Model
+	 * @param BaseContainer $oContainer
 	 */
-	public function getInfo() {
-		return $this->Info;
+	public function initModel(\Entities\BaseContainer $oContainer) {
+		$this->oModel = new \Models\GoodsModel($oContainer);
 	}
 
+	/**
+	 * Getter for Model
+	 * @return \Models\GoodsModel
+	 * @throws \Exception
+	 */
+	public function getModel() {
+		if ( is_null($this->oModel) ) {
+			throw new \Exception('Model is undefined!');
+		}
+		return $this->oModel;
+	}
 
 }
