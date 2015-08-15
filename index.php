@@ -120,6 +120,10 @@
     </div>
 </div>
 
+<div id='AjaxLoader' style="position: fixed; left: 50%; top: 50%; display: none;">
+    <img src="cdn/img/loading.gif" />
+</div>
+
 <script src="cdn/js/index.js"></script>
 
 </body>

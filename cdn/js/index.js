@@ -124,7 +124,7 @@ oPage.renderTable = function(Data) {
         for (TIndex in Data[Id]) {
             DataName = ' data-name="'+TIndex+'" ';
             DataVal = Data[Id][TIndex];
-            Html += '<td><a data-original-title="Введите новое имя" '+DataPK+DataName+' data-type="text" href="#" class="goodsRow column'+TIndex+'" data-value="'+DataVal+'">'+DataVal+'</a></td>';
+            Html += '<td><a data-original-title="Введите новое имя" '+DataPK+DataName+' data-params="{Action: \'Update\'}" data-type="text" href="#" class="goodsRow column'+TIndex+'" data-value="'+DataVal+'">'+DataVal+'</a></td>';
         }
         Html += '<td><a class="btn btn-danger btn-xs btn-small" data-name="'+Data[Id].Name+'" data-pk="'+Id+'" onclick="oPage.confirmDeleteRow(this);">X</a></td>';
         //Html += '<td><a class="btn btn-danger btn-xs btn-small" data-name="'+Data[Id].Name+'" data-pk="'+Id+'" data-toggle="modal" data-target="#confirmDelete">X</a></td>';
@@ -228,6 +228,20 @@ oPage.confirmDeleteRow = function(oContainer) {
 }
 
 oPage.deleteRow = function(oContainer) {
+    $.ajax({
+        url: AjaxUrl,
+        data: 'Action=deleteRow&pk='+$(oContainer).attr('data-pk'),
+        dataType: 'json',
+        type: 'post',
+        cache: false,
+        success: function (response) {
+            $('#confirmDelete').modal('hide');
+            oPage.renderTable(response);
+        },
+        error: function () {
+            oPage.toggleAjaxLoader();
+        }
+    });
     console.log('deleteRow', $(oContainer).attr('data-pk'));
 }
 
@@ -239,6 +253,22 @@ oPage.addRow = function() {
     console.log('addRow');
 }
 
+oPage.toggleAjaxLoader = function() {
+    console.log('addRow');
+}
+
+$(function ($){
+    $("#AjaxLoader").ajaxStop(function(){
+        $(this).hide();
+    });
+    $("#AjaxLoader").ajaxStart(function(){
+        $(this).show();
+    });
+});
+
+
+
 $( document ).ready(function() {
     oPage.loadContent();
+
 });

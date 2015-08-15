@@ -1,18 +1,30 @@
 <?php
+
+use Commands\BaseCommand, Entities\BaseContainer, Utils\UtilFunctions;
+
 require_once('../config.php');
 if ( (!isset($_SERVER['HTTP_X_REQUESTED_WITH']) || $_SERVER['HTTP_X_REQUESTED_WITH'] != 'XMLHttpRequest') )
 {
-	die( 'Request Error!' );
+//	die( 'Request Error!' );
 }
 
-$ResArr = [
-	555 => ['Name' => 'ololo2'],
-	888777 => ['Name' => 'd df sd2'],
-	55888 => ['Name' => 'sd fsd fs'],
-];
-echo json_encode($ResArr,  JSON_UNESCAPED_UNICODE);
-exit;
+//$ResArr = [
+//	555 => ['Name' => 'ololo2'],
+//	888777 => ['Name' => 'd df sd2'],
+//	55888 => ['Name' => 'sd fsd fs'],
+//];
+//echo json_encode($ResArr,  JSON_UNESCAPED_UNICODE);
+//exit;
+//if ( empty($_POST['Action']) ) {
+//	$_POST = $_GET;
+//}
 try {
+
+	$Command = BaseCommand::getInstance(UtilFunctions::getPreparedPostString('Action'));
+	$Command->setData($_POST);
+	//$Command->execute();
+	echo "1 rfe er we w";
+exit;
 	if ( ($Actions = UtilFunctions::getPreparedPostString('Actions')) ) {
 		$oAuth = new Auth\Auth();
 		// 	$oPageController = new UI\PageController();
@@ -48,10 +60,11 @@ try {
 				}
 				break;
 		}
-	} 
-
+	}
+	echo json_encode($ResArr,  JSON_UNESCAPED_UNICODE);
+} catch (HTTPException $e) {
+	header($e->getMessage(), false, $e->getCode());
 } catch (Exception $e) {
-	$ResArr['ok'] =  false;
-	$ResArr['message'] = UtilFunctions::getMessageFromException($e);
+	echo UtilFunctions::getMessageFromException($e);
 }
-echo json_encode($ResArr,  JSON_UNESCAPED_UNICODE);
+

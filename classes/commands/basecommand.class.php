@@ -1,11 +1,12 @@
 <?php
 
-namespace Entities;
+namespace Commands;
 
-abstract class BaseContainer {
+use Entities;
 
-	protected $Info = [];
+abstract class BaseCommand {
 
+	public abstract function execute();
 	protected abstract function getInfoCheckMask();
 
 	/**
@@ -23,12 +24,12 @@ abstract class BaseContainer {
 	 */
 	public static function getInstance($Type)
 	{
-		$ClassName = "{$Type}Container";
-		$FilePath = '\\entities\\'.$ClassName;
+		$ClassName = "{$Type}Command";
+		$FilePath = '\\commands\\'.$ClassName;
 		if ( $ClassName!==__CLASS__ && class_exists($FilePath) ) {
 			$Object = new $FilePath();
 		} else {
-			throw new \HttpException("Unknown commodity!", 400);
+			throw new \HttpException("Unknown command!", 400);
 		}
 		return $Object;
 	}
@@ -43,9 +44,9 @@ abstract class BaseContainer {
 	{
 		foreach($this->getInfoCheckMask() as $Key=>$Val)
 		{
-			if ( empty($Data[$Key]) )
+			if ( empty($Data['pk']) )
 			{
-				throw new \Exception("Undefined key `{$Key}`!");
+				throw new \HTTPException("Undefined key `{$Key}`!");
 			}
 			$DataValue = $Data[$Key];
 			switch($Val[0]) {
@@ -87,5 +88,6 @@ abstract class BaseContainer {
 	public function getInfo() {
 		return $this->Info;
 	}
+
 
 }
