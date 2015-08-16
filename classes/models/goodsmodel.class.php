@@ -29,6 +29,8 @@ class GoodsModel {
 	}
 
 	/**
+	 * Add commodity to DB
+	 * @param BaseContainer $oCommodity
 	 * @return array
 	 */
 	public function create(\Entities\BaseContainer $oCommodity) {
@@ -43,6 +45,7 @@ class GoodsModel {
 	}
 
 	/**
+	 * Get goods data from DB
 	 * @return array
 	 */
 	public function read() {
@@ -66,6 +69,7 @@ class GoodsModel {
 	}
 
 	/**
+	 * Update commodity in DB
 	 * @return array
 	 */
 	public function update(\Entities\BaseContainer $oCommodity) {
@@ -75,6 +79,7 @@ class GoodsModel {
 			'Name' => $CommodityInfo['Name'],
 		];
 		$MongoId = new \MongoId($CommodityInfo['Id']);
+		//Need additional parameter like Name
 		$Filter = [
 			'_id' => $MongoId,
 		];
@@ -84,7 +89,9 @@ class GoodsModel {
 	}
 
 	/**
-	 * @return array
+	 * Delete commodity
+	 * @param BaseContainer $oCommodity
+	 * @return bool
 	 */
 	public function delete(\Entities\BaseContainer $oCommodity) {
 		$oCollection = $this->getCollection();
@@ -98,6 +105,10 @@ class GoodsModel {
 		return true;
 	}
 
+	/**
+	 * Get last modified TimeStamp
+	 * @return int TimeStamp
+	 */
 	public function getLastModified()
 	{
 		$oCollection = $this->getCollection();
@@ -119,6 +130,10 @@ class GoodsModel {
 		return $Result;
 	}
 
+	/**
+	 * Update last modified TimeStamp
+	 * @return int
+	 */
 	public function setLastModified()
 	{
 		$Now = time();

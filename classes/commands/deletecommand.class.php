@@ -13,12 +13,16 @@ class DeleteCommand extends BaseCommand
 	protected function getInfoCheckMask()
 	{
 		return [
-			'pk' => ['string', 40],
+			'pk' => ['string', 24],
 			'Goods' => ['string', 40],
 			'Name' => ['string', 40, 'default'], //3rd param = default value if undefined
 		];
 	}
 
+	/**
+	 * @param array $Data
+	 * @return BaseContainer
+	 */
 	public function init(array $Data) {
 		$oContainer = parent::init($Data);
 		$this->initCommodity($oContainer);
@@ -26,7 +30,7 @@ class DeleteCommand extends BaseCommand
 	}
 
 	/**
-	 * @return mixed
+	 * @return boolean
 	 * @throws \Exception
 	 */
 	public function execute()

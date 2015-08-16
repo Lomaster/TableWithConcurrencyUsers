@@ -1,7 +1,6 @@
 <?php
 define('_ProjectPrefix', 'TableWithConcurrencyUsers');
 define('_GoodsDB', _ProjectPrefix.'_GoodsDB');
-define('_TripsCollection', 'Trips');
 define('_Debug', false);
 
 define('CLASS_DIR', 'classes/');

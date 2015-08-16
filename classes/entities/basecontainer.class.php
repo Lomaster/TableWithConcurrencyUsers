@@ -31,7 +31,7 @@ abstract class BaseContainer {
 		if ( $ClassName!==__CLASS__ && class_exists($FilePath) ) {
 			$Object = new $FilePath();
 		} else {
-			throw new \HttpException("Unknown commodity!", 400);
+			throw new \Exception("Unknown commodity!", 400);
 		}
 		return $Object;
 	}

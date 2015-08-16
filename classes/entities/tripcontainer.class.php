@@ -18,8 +18,12 @@ class TripContainer extends BaseContainer
 		];
 	}
 
+	/**
+	 * Getter for collection name
+	 * @return string
+	 */
 	public function getCollectionForStore() {
-		return _TripsCollection;
+		return 'Trips';
 	}
 
 }

@@ -18,7 +18,7 @@ class UtilFunctions {
 	}
 	
 	/**
-	 * Return processed variable $_POST['Name']
+	 * Return processed variable like $_POST['Name']
 	 * @param string $Name
 	 * @param boolean $Int Convert to Int
 	 * @return boolean|numeric
@@ -37,7 +37,7 @@ class UtilFunctions {
 	}
 	
 	/**
-	 * Return processed variable $_POST['Name']
+	 * Return processed variable like $_POST['Name']
 	 * @param string $Name
 	 * @return boolean|string
 	 */

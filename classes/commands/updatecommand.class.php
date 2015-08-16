@@ -14,7 +14,7 @@ class UpdateCommand extends BaseCommand
 	{
 		return [
 			'name' => ['string', 40],
-			'pk' => ['string', 40],
+			'pk' => ['string', 24],
 			'value' => ['string', 40],
 			'Goods' => ['string', 40],
 		];
