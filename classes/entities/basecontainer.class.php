@@ -4,7 +4,10 @@ namespace Entities;
 
 abstract class BaseContainer {
 
-	protected $Info = [];
+	protected $Info = [
+		'Id' => null,
+	];
+	protected $GoodsGroup = "Undefined"; //Must be set in child class
 
 	protected abstract function getInfoCheckMask();
 
@@ -77,6 +80,10 @@ abstract class BaseContainer {
 		{
 			$this->Info[$Key] = $Data[$Key];
 		}
+		if ( isset($Data['pk']) ) {
+			$this->Info['Id'] = $Data['pk'];
+		}
+		$this->Info['GoodsGroup'] = $this->GoodsGroup;
 		return true;
 	}
 

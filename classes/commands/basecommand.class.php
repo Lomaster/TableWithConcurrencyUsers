@@ -8,6 +8,7 @@ abstract class BaseCommand {
 
 	private $oModel = null;
 	protected $Info = [];
+	protected $Commodity = null;
 
 	public abstract function execute();
 	protected abstract function getInfoCheckMask();
@@ -49,10 +50,21 @@ abstract class BaseCommand {
 		{
 			if ( empty($Data[$Key]) )
 			{
-				throw new \Exception("Undefined key `{$Key}`!");
+				if ( empty($Val[2]) ) {
+					throw new \Exception("Undefined key `{$Key}`!");
+				} else {
+					$Data[$Key] = $Val[2];
+				}
 			}
 			$DataValue = $Data[$Key];
 			switch($Val[0]) {
+				case 'int':
+					if ( !is_numeric($DataValue) )
+					{
+						throw new \Exception("Value of`{$Key}` must be an integer!");
+					}
+					$DataValue = (int)$DataValue;
+					break;
 				case 'string':
 					if ( !($DataValue = strip_tags(trim($DataValue))) )
 					{
@@ -81,11 +93,18 @@ abstract class BaseCommand {
 		{
 			$this->Info[$Key] = $Data[$Key];
 		}
-		//Now we have only 1 commodity `trip`, but can init any from specified parameter
+		if ( !empty($Data['value']) && !empty($Data['name']) ) {
+			$this->Info[$Data['name']] = $Data['value'];
+		}
 		$oContainer = BaseContainer::getInstance($this->Info['Goods']);
-//		var_dump(__FUNCTION__, $this->Info['Goods'], $oContainer);
 		$this->initModel($oContainer);
-		return true;
+		return $oContainer;
+	}
+
+	public function initCommodity(\Entities\BaseContainer $oContainer)
+	{
+		$oContainer->init($this->Info);
+		$this->Commodity = $oContainer;
 	}
 
 	/**

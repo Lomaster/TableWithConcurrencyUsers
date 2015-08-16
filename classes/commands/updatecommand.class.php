@@ -13,16 +13,23 @@ class UpdateCommand extends BaseCommand
 	protected function getInfoCheckMask()
 	{
 		return [
+			'name' => ['string', 40],
 			'pk' => ['string', 40],
 			'value' => ['string', 40],
+			'Goods' => ['string', 40],
 		];
+	}
+
+	public function init(array $Data) {
+		$oContainer = parent::init($Data);
+		$this->initCommodity($oContainer);
+		return $oContainer;
 	}
 
 	public function execute()
 	{
-		$oContainer = BaseContainer::getInstance('trip');
-		return '';
+		$ResArr = $this->getModel()->update($this->Commodity);
+		return $ResArr;
 	}
-
 
 }

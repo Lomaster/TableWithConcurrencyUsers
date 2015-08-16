@@ -31,28 +31,64 @@ class GoodsModel {
 	/**
 	 * @return array
 	 */
+	public function create(\Entities\BaseContainer $oCommodity) {
+		$oCollection = $this->getCollection();
+		$InsertInfo = $oCommodity->getInfo();
+		$oCollection->insert($InsertInfo);
+		$Result = [
+			"".$InsertInfo['_id'] => ['Name' => $InsertInfo['Name']],
+		];
+		return $Result;
+	}
+
+	/**
+	 * @return array
+	 */
 	public function read() {
 		$oCollection = $this->getCollection();
-		$ResArr = iterator_to_array($oCollection->find());
-		$ResArr = [
-	555 => ['Name' => 'ololo2'],
-	888777 => ['Name' => 'd df sd2'],
-	55888 => ['Name' => 'sd fsd fs'],
-];
+		$Filter = [];
+		$Fields = [
+			'Name'=>1,
+		];
+		$Arr = $oCollection->find($Filter, $Fields);
+		$ResArr = [];
+		foreach($Arr as $Row) {
+			$Id = "".$Row['_id'];
+			$ResArr[$Id] = [];
+			$ResArr[$Id]['Name'] = $Row['Name'];
+		}
 		return $ResArr;
 	}
 
 	/**
 	 * @return array
 	 */
-	public function create() {
+	public function update(\Entities\BaseContainer $oCommodity) {
 		$oCollection = $this->getCollection();
-		$ResArr = iterator_to_array($oCollection->find());
-
-		$ResArr = [
-			5486 => ['Name' => 'BANG!! PPP'],
+		$CommodityInfo = $oCommodity->getInfo();
+		$InsertInfo = [
+			'Name' => $CommodityInfo['Name'],
 		];
-		return $ResArr;
+		$MongoId = new \MongoId($CommodityInfo['Id']);
+		$Filter = [
+			'_id' => $MongoId,
+		];
+		$Result = $oCollection->findAndModify($Filter, $InsertInfo);
+		return true;
+	}
+
+	/**
+	 * @return array
+	 */
+	public function delete(\Entities\BaseContainer $oCommodity) {
+		$oCollection = $this->getCollection();
+		$MongoId = new \MongoId($oCommodity->getInfo()['Id']);
+		$Filter = ['_id'=>$MongoId];
+		$Result = $oCollection->remove($Filter);
+		if ( !$Result || !$Result['n'] ) {
+			throw new \LogicException("This row is already deleted!");
+		}
+		return true;
 	}
 
 }

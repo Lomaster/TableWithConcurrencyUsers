@@ -4,6 +4,9 @@
 
 var AjaxUrl = 'ajax/post.ajax.php',
     TableColumnsCount = 3,
+    TableRefreshPause = 3000,
+    TAId = null, //link to setTimeout
+    LastModified = 0, //Do we need render table?
     oPage = {};
 
 oPage.confirmCreateRow = function(oContainer) {
@@ -18,26 +21,29 @@ oPage.createRow = function() {
     }
     $.ajax({
         url: AjaxUrl,
-        data: 'Action=Create&Name='+Name,
+        data: 'Action=Create&Goods=Trip&Name='+Name,
         dataType: 'json',
         type: 'post',
         cache: false,
         success: function (response) {
-            $('#createModal').modal('hide');
-            var Html = '<tr>\n';
-            Html += '<td></td>';
+            var Html = "", DataName, DataVal, DataPK, Id, TIndex;
+            $('#confirmCreate').modal('hide');
             for (Id in response) {
 
             }
+            Html += '<tr id="trId_'+Id+'">\n';
+            Html += '<td></td>';
             for (TIndex in response[Id]) {
                 DataName = ' data-name="'+TIndex+'" ';
                 DataVal = response[Id][TIndex];
+                DataPK = ' data-pk="'+Id+'" ';
                 Html += '<td><a data-original-title="Введите новое имя" '+DataPK+DataName+' data-params="{Action: \'Update\', Goods: \'Trip\'}" data-type="text" href="#" class="goodsRow column'+TIndex+'" data-value="'+DataVal+'">'+DataVal+'</a></td>';
             }
             Html += '<td><a class="btn btn-danger btn-xs btn-small" data-name="'+response[Id].Name+'" data-pk="'+Id+'" onclick="oPage.confirmDeleteRow(this);">X</a></td>';
             //Html += '<td><a class="btn btn-danger btn-xs btn-small" data-name="'+Data[Id].Name+'" data-pk="'+Id+'" data-toggle="modal" data-target="#confirmDelete">X</a></td>';
             Html += "</tr>\n";
             $('#GoodsTable tbody').append(Html);
+            oPage.addEditable();
         //},
         //error: function () {
         //    $('#alert-modal-content').html("Ошибка соединения с сервером!");
@@ -46,7 +52,8 @@ oPage.createRow = function() {
 }
 
 oPage.renderTable = function(Data) {
-    if ( !Data ) {
+    clearTimeout(TAId);
+    if ( !(Data instanceof Object) ) {
         return;
     }
     var Html = '',
@@ -56,17 +63,10 @@ oPage.renderTable = function(Data) {
         DataText = '',
         DataPK = '',
         UDObj = null;
-    if ( !Data.length ) {
-        Html = 'No data';
-    }
-    for (Id in Data) {
-        console.log(Id, Data[Id]);
-        //Не выводим тех кто старше нас по статусу
 
+    for (Id in Data) {
         Html += '<tr id="trId_'+Id+'">\n';
         DataPK = ' data-pk="'+Id+'" ';
-        //DataParams = ' data-params="{\'Action\': \'EditUser\'}" ';
-        DataParams = '';
         Html += '<td></td>';
         for (TIndex in Data[Id]) {
             DataName = ' data-name="'+TIndex+'" ';
@@ -75,14 +75,17 @@ oPage.renderTable = function(Data) {
         }
         Html += '<td><a class="btn btn-danger btn-xs btn-small" data-name="'+Data[Id].Name+'" data-pk="'+Id+'" onclick="oPage.confirmDeleteRow(this);">X</a></td>';
         //Html += '<td><a class="btn btn-danger btn-xs btn-small" data-name="'+Data[Id].Name+'" data-pk="'+Id+'" data-toggle="modal" data-target="#confirmDelete">X</a></td>';
-
         Html += "</tr>\n";
     }
     if ( !Html ) {
-        Html += "<tr><td colspan="+TableColumnsCount+" align=center>Нет записей</td></tr>\n";
+        Html += "<tr><td colspan="+TableColumnsCount+" align=center>No records</td></tr>\n";
     }
     $('#GoodsTable tbody').html(Html);
+    oPage.addEditable();
+    TAId = setTimeout(oPage.loadContent, TableRefreshPause);
+}
 
+oPage.addEditable = function() {
     $('.columnName').editable({
         type:  'text',
         name:  'tripname',
@@ -101,7 +104,7 @@ oPage.renderTable = function(Data) {
 oPage.loadContent = function() {
     $.ajax({
         url: AjaxUrl,
-        data: 'Action=Read&Goods=Trip',
+        data: 'Action=Read&Goods=Trip&LastModified='+LastModified,
         dataType: 'json',
         type: 'post',
         cache: false,
@@ -124,7 +127,7 @@ oPage.confirmDeleteRow = function(oContainer) {
 oPage.deleteRow = function(oContainer) {
     $.ajax({
         url: AjaxUrl,
-        data: 'Action=Delete&pk='+$(oContainer).attr('data-pk'),
+        data: 'Action=Delete&Goods=Trip&pk='+$(oContainer).attr('data-pk'),
         dataType: 'json',
         type: 'post',
         cache: false,

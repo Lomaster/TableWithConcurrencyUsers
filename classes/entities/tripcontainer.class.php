@@ -5,6 +5,8 @@ namespace Entities;
 class TripContainer extends BaseContainer
 {
 
+	protected $GoodsGroup = "Trip";
+
 	/**
 	 * Getter for mask of validation
 	 * @return array
@@ -12,7 +14,7 @@ class TripContainer extends BaseContainer
 	protected function getInfoCheckMask()
 	{
 		return [
-			'Name' => ['string', 10],
+			'Name' => ['string', 40],
 		];
 	}
 

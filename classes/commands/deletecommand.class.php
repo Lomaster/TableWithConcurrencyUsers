@@ -14,14 +14,25 @@ class DeleteCommand extends BaseCommand
 	{
 		return [
 			'pk' => ['string', 40],
+			'Goods' => ['string', 40],
+			'Name' => ['string', 40, 'default'], //3rd param = default value if undefined
 		];
 	}
 
-	public function execute()
-	{
-		$oContainer = BaseContainer::getInstance('trip');
-		return '';
+	public function init(array $Data) {
+		$oContainer = parent::init($Data);
+		$this->initCommodity($oContainer);
+		return $oContainer;
 	}
 
+	/**
+	 * @return mixed
+	 * @throws \Exception
+	 */
+	public function execute()
+	{
+		$Result = $this->getModel()->delete($this->Commodity);
+		return $Result;
+	}
 
 }

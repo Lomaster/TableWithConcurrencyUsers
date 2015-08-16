@@ -14,6 +14,7 @@ class ReadCommand extends BaseCommand
 	{
 		return [
 			'Goods' => ['string', 40],
+			'LastModified' => ['int', 0, 0],
 		];
 	}
 

@@ -20,8 +20,8 @@ try {
 //	$Result = $Command->execute();
 //	var_dump($Result);
 	echo json_encode($Result, JSON_UNESCAPED_UNICODE);
-} catch (HTTPException $e) {
-	header($e->getMessage(), false, $e->getCode());
+//} catch (HTTPException $e) {
+//	header($e->getMessage(), false, $e->getCode());
 } catch (LogicException $e) {
 	echo "Data error: ".UtilFunctions::getMessageFromException($e);
 } catch (Exception $e) {
