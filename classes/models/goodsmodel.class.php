@@ -38,6 +38,7 @@ class GoodsModel {
 		$Result = [
 			"".$InsertInfo['_id'] => ['Name' => $InsertInfo['Name']],
 		];
+		$this->setLastModified();
 		return $Result;
 	}
 
@@ -46,9 +47,13 @@ class GoodsModel {
 	 */
 	public function read() {
 		$oCollection = $this->getCollection();
-		$Filter = [];
+		$Filter = [
+			'Name' => [
+				'$exists' => true,
+			],
+		];
 		$Fields = [
-			'Name'=>1,
+			'Name' => 1,
 		];
 		$Arr = $oCollection->find($Filter, $Fields);
 		$ResArr = [];
@@ -74,6 +79,7 @@ class GoodsModel {
 			'_id' => $MongoId,
 		];
 		$Result = $oCollection->findAndModify($Filter, $InsertInfo);
+		$this->setLastModified(); //Need check $Result
 		return true;
 	}
 
@@ -88,7 +94,45 @@ class GoodsModel {
 		if ( !$Result || !$Result['n'] ) {
 			throw new \LogicException("This row is already deleted!");
 		}
+		$this->setLastModified();
 		return true;
+	}
+
+	public function getLastModified()
+	{
+		$oCollection = $this->getCollection();
+		$Filter = [
+			'LastModified'=>[
+				'$exists' => true,
+			]
+		];
+		$Fields = [
+			'LastModified'=>1,
+			'_id'=>0,
+		];
+		$Result = $oCollection->findOne($Filter, $Fields);
+		if ( is_null($Result) ) {
+			$Result = $this->setLastModified();
+		} else {
+			$Result = $Result['LastModified'];
+		}
+		return $Result;
+	}
+
+	public function setLastModified()
+	{
+		$Now = time();
+		$oCollection = $this->getCollection();
+		$Filter = [
+			'LastModified'=>[
+				'$gt'=>0
+			]
+		];
+		$Data = [
+			'LastModified'=> $Now,
+		];
+		$Result = $oCollection->update($Filter, $Data, ['upsert'=>true]);
+		return $Now;
 	}
 
 }

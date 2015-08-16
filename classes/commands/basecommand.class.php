@@ -23,8 +23,8 @@ abstract class BaseCommand {
 	/**
 	 * Factory method
 	 * @param $Type string
-	 * @return BaseContainer
-	 * @throws \Exception
+	 * @return BaseContainer $Object
+	 * @throws \HttpException
 	 */
 	public static function getInstance($Type)
 	{
@@ -82,9 +82,9 @@ abstract class BaseCommand {
 	}
 
 	/**
-	 * Setter for Container info
+	 * Setter for command info
 	 * @param array $Data
-	 * @return bool
+	 * @return BaseContainer $oContainer
 	 */
 	public function init(array $Data)
 	{
@@ -110,6 +110,7 @@ abstract class BaseCommand {
 	/**
 	 * Init for Model
 	 * @param BaseContainer $oContainer
+	 * @return null
 	 */
 	public function initModel(\Entities\BaseContainer $oContainer) {
 		$this->oModel = new \Models\GoodsModel($oContainer);

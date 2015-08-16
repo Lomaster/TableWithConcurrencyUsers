@@ -6,7 +6,7 @@ var AjaxUrl = 'ajax/post.ajax.php',
     TableColumnsCount = 3,
     TableRefreshPause = 3000,
     TAId = null, //link to setTimeout
-    LastModified = 0, //Do we need render table?
+    LastModified = 1, //Do we need render table?
     oPage = {};
 
 oPage.confirmCreateRow = function(oContainer) {
@@ -46,7 +46,6 @@ oPage.createRow = function() {
             oPage.addEditable();
         //},
         //error: function () {
-        //    $('#alert-modal-content').html("Ошибка соединения с сервером!");
         }
     });
 }
@@ -54,8 +53,10 @@ oPage.createRow = function() {
 oPage.renderTable = function(Data) {
     clearTimeout(TAId);
     if ( !(Data instanceof Object) ) {
+        TAId = setTimeout(oPage.loadContent, TableRefreshPause);
         return;
     }
+    $('.columnName').popover('hide');
     var Html = '',
         RowCnt = 0,
         DataName = '',
@@ -76,9 +77,6 @@ oPage.renderTable = function(Data) {
         Html += '<td><a class="btn btn-danger btn-xs btn-small" data-name="'+Data[Id].Name+'" data-pk="'+Id+'" onclick="oPage.confirmDeleteRow(this);">X</a></td>';
         //Html += '<td><a class="btn btn-danger btn-xs btn-small" data-name="'+Data[Id].Name+'" data-pk="'+Id+'" data-toggle="modal" data-target="#confirmDelete">X</a></td>';
         Html += "</tr>\n";
-    }
-    if ( !Html ) {
-        Html += "<tr><td colspan="+TableColumnsCount+" align=center>No records</td></tr>\n";
     }
     $('#GoodsTable tbody').html(Html);
     oPage.addEditable();
@@ -109,10 +107,13 @@ oPage.loadContent = function() {
         type: 'post',
         cache: false,
         success: function (response) {
+            if ( undefined!==response.LastModified ) {
+                LastModified = response.LastModified;
+                delete response.LastModified;
+            }
             oPage.renderTable(response);
         //},
         //error: function () {
-        //    oPage.toggleAjaxLoader();
         }
     });
 }
@@ -121,7 +122,6 @@ oPage.confirmDeleteRow = function(oContainer) {
     $('#ButtonConfirmDelete').attr('data-pk', $(oContainer).data('pk'));
     $('#ConfirmDelete-modal-body').text('Do you want delete `'+$(oContainer).data('name')+'`?');
     $('#confirmDelete').modal('show');
-    //console.log('confirmDeleteRow', $(oContainer).data('pk'), $(oContainer).data('name'));
 }
 
 oPage.deleteRow = function(oContainer) {
@@ -137,30 +137,21 @@ oPage.deleteRow = function(oContainer) {
             oPage.renderTable(response);
         //},
         //error: function () {
-        //    oPage.toggleAjaxLoader();
         }
     });
-    console.log('deleteRow', $(oContainer).attr('data-pk'));
+
 }
 
-oPage.confirmAddRow = function() {
-    console.log('addRow');
-}
-
-oPage.addRow = function() {
-    console.log('addRow');
-}
-
-$(function ($){
-    $("#AjaxLoader").ajaxStop(function(){
+$( document ).ready(function() {
+    oPage.loadContent();
+    $("#AjaxLoader").ajaxError(function(event, jqxhr, settings, thrownError){
+        $(this).hide();
+        console.log('ajaxError', event, jqxhr, settings, thrownError);
+        alert(jqxhr.responseText);
+    });    $("#AjaxLoader").ajaxStop(function(){
         $(this).hide();
     });
     $("#AjaxLoader").ajaxStart(function(){
         $(this).show();
     });
-});
-
-$( document ).ready(function() {
-    oPage.loadContent();
-
 });

@@ -20,9 +20,22 @@ class ReadCommand extends BaseCommand
 
 	public function execute()
 	{
-		$ResArr = $this->getModel()->read();
-		return $ResArr;
+		$Result = true;
+		if ( ($LastModified = $this->checkDataExpired()) ) {
+			$Result = $this->getModel()->read();
+			$Result['LastModified'] = $LastModified;
+		}
+		return $Result;
 	}
 
+	protected function checkDataExpired()
+	{
+		$CurrentLM = $this->getModel()->getLastModified();
+		$Result = false;
+		if ( $CurrentLM != $this->Info['LastModified'] ) {
+			$Result = $CurrentLM;
+		}
+		return $Result;
+	}
 
 }

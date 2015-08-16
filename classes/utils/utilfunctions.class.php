@@ -6,10 +6,14 @@ class UtilFunctions {
 	public static function getMessageFromException(\Exception $e, $All = false) {
 		$ErrorMessage = $e->getMessage();
 		$ErrCode = $e->getCode();
-		if ( $ErrCode ) {
+		if ( $ErrCode )
+		{
 			$ErrorMessage .= " (Code {$ErrCode})";
 		}
-		$ErrorMessage .= "<br>".$e->getTraceAsString();
+		if ( _Debug )
+		{
+			$ErrorMessage .= "<br>".$e->getTraceAsString();
+		}
 		return $ErrorMessage;
 	}
 	

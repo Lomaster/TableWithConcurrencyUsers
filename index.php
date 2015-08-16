@@ -18,40 +18,26 @@
     <title>Simple table of goods</title>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
-<!--    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>-->
     <script src="cdn/js/bootstrap.min.js"></script>
-<!--    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">-->
     <link rel="stylesheet" href="cdn/css/bootstrap.min.css">
-<!--    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">-->
 
     <!--    bootstrap-editable-->
     <script src="cdn/bootstrap-editable/bootstrap-editable.min.js"></script>
     <link href="cdn/bootstrap-editable/bootstrap-editable.css" rel="stylesheet">
-<!--    <script type='text/javascript' src='cdn/bootstrap-editable-custom.js'></script>-->
 
     <style>
-        body {
-        }
         .starter-template {
             padding: 40px 15px;
             text-align: center;
             width: 600px;
         }
-        .LoaderGifCont {
-            /*display: none;*/
-            display: inline;
-            width: 16px;
-        }
-        #LoaderGif {
-            display: none;
-        }
         #GoodsTable {
             width: 100%;
         }
+        /*Auto-numeration*/
         #GoodsTable tbody tr:not(.fble_htr) {
             counter-increment: rowNumber;
         }
-
         #GoodsTable tbody tr:not(.fble_htr) td:first-child::before {
             content: counter(rowNumber);
             min-width: 1em;
@@ -61,7 +47,6 @@
 </head>
 
 <body>
-
 <div class="container">
 
     <div class="starter-template">

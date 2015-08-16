@@ -17,12 +17,20 @@ class CreateCommand extends BaseCommand
 		];
 	}
 
+	/**
+	 * @param array $Data
+	 * @return \Entities\BaseContainer
+	 */
 	public function init(array $Data) {
 		$oContainer = parent::init($Data);
 		$this->initCommodity($oContainer);
 		return $oContainer;
 	}
 
+	/**
+	 * @return array
+	 * @throws \Exception
+	 */
 	public function execute()
 	{
 		$ResArr = $this->getModel()->create($this->Commodity);
